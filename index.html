@@ -1,0 +1,710 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Sommaire — noopcast</title>
+<meta name="description" content="Index des œuvres et expérimentations de noopcast." />
+<meta name="color-scheme" content="dark" />
+<meta property="og:title" content="Sommaire — noopcast" />
+<meta property="og:description" content="Index des œuvres et expérimentations." />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%230e0b08'/%3E%3Ctext x='16' y='22' font-family='Georgia' font-size='20' font-style='italic' fill='%23d4a574' text-anchor='middle'%3E§%3C/text%3E%3C/svg%3E" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT@0,9..144,200..900,0..100;1,9..144,200..900,0..100&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet" />
+
+<style>
+  :root {
+    --ink: #f4ead8;
+    --ink-dim: #b8a890;
+    --ink-muted: #6b5d4e;
+    --ink-faint: #3a3128;
+    --paper: #0d0a07;
+    --paper-alt: #141009;
+    --accent: #d4a574;
+    --accent-hot: #e4b37a;
+    --rust: #c85a3f;
+    --rule: rgba(244, 234, 216, 0.12);
+    --rule-soft: rgba(244, 234, 216, 0.06);
+
+    --serif: "Fraunces", "Big Caslon", "Hoefler Text", Georgia, serif;
+    --mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+
+    --maxw: 1280px;
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+
+  html {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--serif);
+    font-size: 17px;
+    line-height: 1.55;
+    font-feature-settings: "ss01", "ss02", "ss03", "cv02";
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    min-height: 100dvh;
+    position: relative;
+    overflow-x: hidden;
+  }
+
+  /* Grain overlay */
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 100;
+    opacity: 0.35;
+    mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220' viewBox='0 0 220 220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.95  0 0 0 0 0.9  0 0 0 0 0.82  0 0 0 0.5 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  }
+
+  /* Vignette */
+  body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 99;
+    background: radial-gradient(ellipse 120% 90% at 50% 50%, transparent 40%, rgba(0,0,0,0.45) 100%);
+  }
+
+  ::selection { background: var(--accent); color: var(--paper); }
+
+  a { color: inherit; text-decoration: none; }
+
+  /* ---------- Layout ---------- */
+  .shell {
+    position: relative;
+    z-index: 1;
+    max-width: var(--maxw);
+    margin: 0 auto;
+    padding: clamp(28px, 4vw, 56px) clamp(24px, 5vw, 72px) clamp(60px, 8vw, 120px);
+    min-height: 100dvh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ---------- Ornamental framework ---------- */
+  .frame {
+    position: fixed;
+    inset: 18px;
+    border: 1px solid var(--rule);
+    pointer-events: none;
+    z-index: 2;
+  }
+  .frame::before, .frame::after {
+    content: "";
+    position: absolute;
+    background: var(--accent);
+  }
+  .frame::before {
+    top: -1px; left: -1px;
+    width: 40px; height: 1px;
+  }
+  .frame::after {
+    bottom: -1px; right: -1px;
+    width: 40px; height: 1px;
+  }
+  @media (max-width: 700px) {
+    .frame { inset: 10px; }
+  }
+
+  /* ---------- Topbar ---------- */
+  .topbar {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    gap: 24px;
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-dim);
+    padding-bottom: clamp(40px, 6vw, 80px);
+    opacity: 0;
+    animation: fadeDown 0.9s cubic-bezier(.2,.7,.2,1) 0.1s forwards;
+  }
+  .topbar .left { justify-self: start; }
+  .topbar .center {
+    justify-self: center;
+    display: inline-flex; align-items: center; gap: 10px;
+    color: var(--ink);
+  }
+  .topbar .center .dot {
+    width: 6px; height: 6px; border-radius: 999px;
+    background: var(--accent);
+    box-shadow: 0 0 0 3px rgba(212,165,116,0.18);
+    animation: pulse 2.4s ease-in-out infinite;
+  }
+  .topbar .right { justify-self: end; }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.45; }
+  }
+
+  /* ---------- Masthead ---------- */
+  .masthead {
+    position: relative;
+    padding: clamp(10px, 3vw, 28px) 0 clamp(44px, 6vw, 80px);
+    border-top: 1px solid var(--rule);
+    border-bottom: 1px solid var(--rule);
+    margin-bottom: clamp(56px, 8vw, 112px);
+  }
+
+  .eyebrow {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--accent);
+    display: inline-flex; align-items: center; gap: 14px;
+    padding: 18px 0 14px;
+    opacity: 0;
+    animation: fadeUp 0.9s cubic-bezier(.2,.7,.2,1) 0.25s forwards;
+  }
+  .eyebrow::before, .eyebrow::after {
+    content: "";
+    display: block;
+    width: 32px; height: 1px;
+    background: currentColor;
+    opacity: 0.7;
+  }
+
+  .title {
+    font-family: var(--serif);
+    font-weight: 340;
+    font-style: italic;
+    font-size: clamp(72px, 18vw, 240px);
+    line-height: 0.86;
+    letter-spacing: -0.035em;
+    color: var(--ink);
+    margin: 0;
+    font-variation-settings: "opsz" 144, "SOFT" 80;
+    opacity: 0;
+    animation: fadeUp 1.1s cubic-bezier(.2,.7,.2,1) 0.35s forwards;
+  }
+
+  .title .amp {
+    display: inline-block;
+    color: var(--accent);
+    font-weight: 280;
+    transform: translateY(-0.05em);
+    margin: 0 -0.05em;
+  }
+
+  .subtitle {
+    margin-top: clamp(28px, 4vw, 40px);
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 40px;
+    align-items: end;
+    opacity: 0;
+    animation: fadeUp 1s cubic-bezier(.2,.7,.2,1) 0.55s forwards;
+  }
+  .subtitle .lede {
+    max-width: 52ch;
+    font-family: var(--serif);
+    font-weight: 300;
+    font-style: italic;
+    font-size: clamp(18px, 1.9vw, 23px);
+    line-height: 1.4;
+    color: var(--ink-dim);
+    letter-spacing: -0.005em;
+  }
+  .subtitle .lede em {
+    color: var(--ink);
+    font-style: italic;
+    background: linear-gradient(transparent 62%, rgba(212,165,116,0.22) 62%);
+    padding: 0 2px;
+  }
+  .subtitle .meta {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+    text-align: right;
+    line-height: 1.9;
+    white-space: nowrap;
+  }
+  .subtitle .meta b { color: var(--ink); font-weight: 500; }
+
+  @media (max-width: 780px) {
+    .subtitle { grid-template-columns: 1fr; gap: 22px; }
+    .subtitle .meta { text-align: left; }
+  }
+
+  /* ---------- Sommaire heading ---------- */
+  .section-head {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: baseline;
+    gap: 18px;
+    padding-bottom: 22px;
+    margin-bottom: 0;
+    border-bottom: 1px solid var(--rule);
+    opacity: 0;
+    animation: fadeUp 0.9s cubic-bezier(.2,.7,.2,1) 0.7s forwards;
+  }
+  .section-head h2 {
+    font-family: var(--serif);
+    font-style: italic;
+    font-weight: 360;
+    font-size: clamp(22px, 2.4vw, 30px);
+    margin: 0;
+    letter-spacing: -0.01em;
+  }
+  .section-head .tag {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+  }
+  .section-head .count {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    color: var(--accent);
+  }
+
+  /* ---------- Entries list ---------- */
+  .entries {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .entry {
+    position: relative;
+    display: grid;
+    grid-template-columns: 170px 1fr minmax(220px, 320px);
+    gap: clamp(24px, 4vw, 56px);
+    align-items: start;
+    padding: clamp(32px, 4.5vw, 60px) 4px;
+    border-bottom: 1px solid var(--rule);
+    opacity: 0;
+    transform: translateY(18px);
+    animation: fadeUp 1s cubic-bezier(.2,.7,.2,1) forwards;
+  }
+  .entry:nth-child(1) { animation-delay: 0.85s; }
+  .entry:nth-child(2) { animation-delay: 1.0s; }
+  .entry:nth-child(3) { animation-delay: 1.15s; }
+
+  .entry::before {
+    content: "";
+    position: absolute;
+    left: 0; right: 0; top: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--accent) 35%, var(--accent) 65%, transparent);
+    transform: scaleX(0);
+    transform-origin: left center;
+    transition: transform 0.7s cubic-bezier(.2,.7,.2,1);
+    opacity: 0.7;
+  }
+  .entry:hover::before { transform: scaleX(1); }
+
+  .entry .numeral {
+    font-family: var(--serif);
+    font-style: italic;
+    font-weight: 260;
+    font-size: clamp(88px, 12vw, 160px);
+    line-height: 0.82;
+    color: var(--ink);
+    letter-spacing: -0.04em;
+    font-variation-settings: "opsz" 144, "SOFT" 100;
+    position: relative;
+    transition: color 0.5s ease, transform 0.6s cubic-bezier(.2,.7,.2,1);
+    will-change: transform;
+  }
+  .entry .numeral::after {
+    content: "";
+    position: absolute;
+    left: -6px; right: 40%;
+    bottom: 0.08em;
+    height: 1px;
+    background: var(--accent);
+    transform: scaleX(0);
+    transform-origin: left center;
+    transition: transform 0.8s cubic-bezier(.2,.7,.2,1);
+  }
+  .entry:hover .numeral { color: var(--accent); transform: translateX(6px); }
+  .entry:hover .numeral::after { transform: scaleX(1); }
+
+  .entry .body h3 {
+    font-family: var(--serif);
+    font-weight: 360;
+    font-size: clamp(34px, 4.3vw, 56px);
+    line-height: 1;
+    letter-spacing: -0.02em;
+    margin: 0 0 18px;
+    font-variation-settings: "opsz" 144, "SOFT" 50;
+  }
+  .entry .body h3 .em {
+    font-style: italic;
+    font-weight: 320;
+    color: var(--ink-dim);
+  }
+
+  .entry .body .dek {
+    font-family: var(--serif);
+    font-weight: 340;
+    font-size: 16.5px;
+    line-height: 1.55;
+    color: var(--ink-dim);
+    max-width: 56ch;
+    margin: 0 0 22px;
+  }
+
+  .entry .body .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 10px;
+    margin-top: 2px;
+  }
+  .entry .body .tags span {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+    padding: 5px 10px;
+    border: 1px solid var(--rule);
+    border-radius: 999px;
+    background: rgba(244, 234, 216, 0.02);
+  }
+
+  .entry .aside {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    padding-top: 12px;
+  }
+  .entry .aside .row {
+    display: grid;
+    grid-template-columns: 80px 1fr;
+    gap: 16px;
+    align-items: baseline;
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    color: var(--ink-dim);
+    padding-bottom: 10px;
+    border-bottom: 1px dashed var(--rule-soft);
+  }
+  .entry .aside .row .k {
+    text-transform: uppercase;
+    letter-spacing: 0.22em;
+    color: var(--ink-muted);
+    font-size: 9.5px;
+  }
+  .entry .aside .row .v { color: var(--ink); }
+
+  .entry .aside .cta-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-top: 4px;
+  }
+
+  .cta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    color: var(--ink);
+    padding: 14px 16px;
+    border: 1px solid var(--rule);
+    background: var(--paper-alt);
+    transition: all 0.4s cubic-bezier(.2,.7,.2,1);
+    position: relative;
+    overflow: hidden;
+    text-transform: lowercase;
+  }
+  .cta .label { position: relative; z-index: 1; }
+  .cta .arrow {
+    position: relative;
+    z-index: 1;
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 18px;
+    transition: transform 0.4s cubic-bezier(.2,.7,.2,1);
+  }
+  .cta::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: var(--accent);
+    transform: translateX(-101%);
+    transition: transform 0.5s cubic-bezier(.2,.7,.2,1);
+  }
+  .cta:hover { color: var(--paper); border-color: var(--accent); }
+  .cta:hover::before { transform: translateX(0); }
+  .cta:hover .arrow { transform: translateX(6px); }
+
+  .cta.primary { color: var(--accent); }
+  .cta.secondary {
+    color: var(--ink-dim);
+    background: transparent;
+    font-size: 11px;
+    padding: 11px 16px;
+  }
+  .cta.secondary::before { background: var(--ink); }
+  .cta.secondary:hover { color: var(--paper); border-color: var(--ink); }
+
+  /* Responsive entry */
+  @media (max-width: 960px) {
+    .entry {
+      grid-template-columns: 1fr;
+      gap: 22px;
+    }
+    .entry .numeral {
+      font-size: clamp(72px, 18vw, 120px);
+    }
+    .entry .aside .row { grid-template-columns: 90px 1fr; }
+  }
+
+  /* ---------- Colophon ---------- */
+  .colophon {
+    margin-top: clamp(60px, 8vw, 120px);
+    padding-top: 26px;
+    border-top: 1px solid var(--rule);
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: 24px;
+    align-items: center;
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+    opacity: 0;
+    animation: fadeUp 1s ease 1.4s forwards;
+  }
+  .colophon .center {
+    font-family: var(--serif);
+    font-style: italic;
+    font-weight: 330;
+    font-size: 14px;
+    color: var(--ink);
+    text-transform: none;
+    letter-spacing: 0;
+  }
+  .colophon .right { text-align: right; }
+  .colophon a { color: var(--ink-dim); transition: color 0.3s; }
+  .colophon a:hover { color: var(--accent); }
+
+  @media (max-width: 720px) {
+    .colophon { grid-template-columns: 1fr; text-align: left !important; }
+    .colophon .right { text-align: left; }
+    .topbar { grid-template-columns: 1fr 1fr; }
+    .topbar .center { display: none; }
+  }
+
+  /* ---------- Keyframes ---------- */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(18px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fadeDown {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+
+  /* ---------- Clock ---------- */
+  .clock { font-variant-numeric: tabular-nums; }
+</style>
+</head>
+<body>
+
+<div class="frame" aria-hidden="true"></div>
+
+<main class="shell">
+
+  <header class="topbar">
+    <div class="left">noopcast &nbsp;·&nbsp; MMXXVI</div>
+    <div class="center"><span class="dot"></span><span>sommaire en ligne</span></div>
+    <div class="right clock" id="clock">—</div>
+  </header>
+
+  <section class="masthead" aria-label="Titre">
+    <div class="eyebrow">Index des œuvres</div>
+    <h1 class="title">Sommaire<span class="amp">.</span></h1>
+    <div class="subtitle">
+      <p class="lede">Un index vivant de <em>trois explorations</em> — un entraîneur de calcul, un manifeste sur le pouvoir, un simulateur de crédit. Choisissez votre chapitre.</p>
+      <div class="meta">
+        Édition&nbsp;<b>N°&nbsp;01</b><br />
+        Trois pièces · Une archive<br />
+        <b>noopcast.github.io</b>
+      </div>
+    </div>
+  </section>
+
+  <section aria-labelledby="sommaire">
+    <div class="section-head">
+      <h2 id="sommaire">Table des matières</h2>
+      <span class="tag" aria-hidden="true">— lecture libre</span>
+      <span class="count">003 / 003</span>
+    </div>
+
+    <ol class="entries">
+
+      <li class="entry">
+        <div class="numeral" aria-hidden="true">I</div>
+        <div class="body">
+          <h3>Mathtype<span class="em">, entraîneur</span></h3>
+          <p class="dek">Un entraîneur minimaliste de calcul mental — calcul, algèbre, matrices. Difficulté adaptative, scores persistants, zéro build. Une salle d'exercice pour le cerveau, sobre et immédiate.</p>
+          <div class="tags">
+            <span>calcul mental</span>
+            <span>algèbre</span>
+            <span>matrices</span>
+            <span>adaptatif</span>
+          </div>
+        </div>
+        <aside class="aside">
+          <div class="row"><span class="k">Chapitre</span><span class="v">I — Exercice</span></div>
+          <div class="row"><span class="k">Nature</span><span class="v">outil éducatif</span></div>
+          <div class="row"><span class="k">Format</span><span class="v">web · no-build</span></div>
+          <div class="cta-stack">
+            <a class="cta primary" href="https://noopcast.github.io/mathtype/" target="_blank" rel="noopener">
+              <span class="label">ouvrir l'application</span>
+              <span class="arrow">→</span>
+            </a>
+            <a class="cta secondary" href="https://github.com/noopcast/mathtype" target="_blank" rel="noopener">
+              <span class="label">code source · github</span>
+              <span class="arrow">↗</span>
+            </a>
+          </div>
+        </aside>
+      </li>
+
+      <li class="entry">
+        <div class="numeral" aria-hidden="true">II</div>
+        <div class="body">
+          <h3>Les lois<span class="em"> du pouvoir</span></h3>
+          <p class="dek">Une lecture structurée des principes de l'influence. Chaque loi condensée, annotée, mise en regard d'exemples. Un manuel de lucidité à feuilleter lentement.</p>
+          <div class="tags">
+            <span>stratégie</span>
+            <span>influence</span>
+            <span>essai</span>
+            <span>archive</span>
+          </div>
+        </div>
+        <aside class="aside">
+          <div class="row"><span class="k">Chapitre</span><span class="v">II — Essai</span></div>
+          <div class="row"><span class="k">Nature</span><span class="v">corpus annoté</span></div>
+          <div class="row"><span class="k">Format</span><span class="v">lecture web</span></div>
+          <div class="cta-stack">
+            <a class="cta primary" href="https://noopcast.github.io/lois-du-pouvoir/" target="_blank" rel="noopener">
+              <span class="label">ouvrir la lecture</span>
+              <span class="arrow">→</span>
+            </a>
+            <a class="cta secondary" href="https://github.com/noopcast/lois-du-pouvoir" target="_blank" rel="noopener">
+              <span class="label">code source · github</span>
+              <span class="arrow">↗</span>
+            </a>
+          </div>
+        </aside>
+      </li>
+
+      <li class="entry">
+        <div class="numeral" aria-hidden="true">III</div>
+        <div class="body">
+          <h3>Simulation<span class="em"> de crédit</span></h3>
+          <p class="dek">Calculer, comparer, décider. Un simulateur clair pour estimer mensualités, coût total et amortissement d'un emprunt. Transparent dans ses formules, immédiat dans sa lecture.</p>
+          <div class="tags">
+            <span>finance</span>
+            <span>mensualité</span>
+            <span>amortissement</span>
+            <span>décision</span>
+          </div>
+        </div>
+        <aside class="aside">
+          <div class="row"><span class="k">Chapitre</span><span class="v">III — Outil</span></div>
+          <div class="row"><span class="k">Nature</span><span class="v">calculateur</span></div>
+          <div class="row"><span class="k">Format</span><span class="v">web interactif</span></div>
+          <div class="cta-stack">
+            <a class="cta primary" href="https://noopcast.github.io/simulation-credit/" target="_blank" rel="noopener">
+              <span class="label">ouvrir le simulateur</span>
+              <span class="arrow">→</span>
+            </a>
+            <a class="cta secondary" href="https://github.com/noopcast/simulation-credit" target="_blank" rel="noopener">
+              <span class="label">code source · github</span>
+              <span class="arrow">↗</span>
+            </a>
+          </div>
+        </aside>
+      </li>
+
+    </ol>
+  </section>
+
+  <footer class="colophon">
+    <div class="left">§ fin du sommaire</div>
+    <div class="center">« L'index est la porte — franchissez-la. »</div>
+    <div class="right">
+      <a href="https://github.com/noopcast" target="_blank" rel="noopener">@noopcast sur github ↗</a>
+    </div>
+  </footer>
+
+</main>
+
+<script>
+  // Horloge discrète dans la topbar
+  (function () {
+    const el = document.getElementById('clock');
+    if (!el) return;
+    const pad = (n) => String(n).padStart(2, '0');
+    const tick = () => {
+      const d = new Date();
+      el.textContent = `Paris · ${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
+    };
+    tick();
+    setInterval(tick, 1000);
+  })();
+
+  // Parallaxe discret sur les chiffres romains au mouvement de souris
+  (function () {
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    if (matchMedia('(hover: none)').matches) return;
+    const nums = document.querySelectorAll('.entry .numeral');
+    let rafId = null;
+    let mx = 0, my = 0;
+    document.addEventListener('mousemove', (e) => {
+      mx = (e.clientX / window.innerWidth - 0.5);
+      my = (e.clientY / window.innerHeight - 0.5);
+      if (rafId) return;
+      rafId = requestAnimationFrame(() => {
+        nums.forEach((n, i) => {
+          const depth = 6 + i * 2;
+          n.style.setProperty('transform', `translate(${mx * depth}px, ${my * depth * 0.6}px)`);
+        });
+        rafId = null;
+      });
+    }, { passive: true });
+  })();
+</script>
+
+</body>
+</html>
